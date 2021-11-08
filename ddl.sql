@@ -1,6 +1,3 @@
---Yelp
---Teste
-
 CREATE TABLE comercio(
 	id varchar(22) NOT NULL,
 	nome varchar(255) NOT NULL,
