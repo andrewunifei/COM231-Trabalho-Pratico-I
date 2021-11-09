@@ -9,21 +9,13 @@ CREATE TABLE comercio(
 	pseudonimo_categoria varchar(255),
 	quant_avaliacoes int NOT NULL,
 	primary key(id)
-)
-
-CREATE TABLE transacao(
-	id_comercio varchar(22) NOT NULL,
-	id serial NOT NULL,
-	tipo varchar(255) NOT NULL,
-	primary key(id),
-	foreign key(id_comercio) references comercio(id)
-)
+);
 
 CREATE TABLE usuario(
 	id varchar(22) NOT NULL,
 	nome varchar(255) NOT NULL,
 	primary key(id)
-)
+);
 
 CREATE TABLE avaliacao(
 	id_comercio varchar(22) NOT NULL,
@@ -36,7 +28,16 @@ CREATE TABLE avaliacao(
 	primary key(id),
 	foreign key(id_comercio) references comercio(id),
 	foreign key(id_usuario) references usuario(id)
-)
+);
+
+CREATE TABLE transacao(
+	id_comercio varchar(22) NOT NULL,
+	id serial NOT NULL,
+	tipo varchar(255) NOT NULL,
+	primary key(id),
+	foreign key(id_comercio) references comercio(id)
+);
+
 
 CREATE TABLE localizacao(
 	id_comercio varchar(22) NOT NULL,
@@ -48,4 +49,4 @@ CREATE TABLE localizacao(
 	logradouro varchar(255) NOT NULL,
 	primary key(id),
 	foreign key(id_comercio) references comercio(id)
-)
+);
