@@ -125,11 +125,13 @@ def query_api(location):
     # No nosso caso SEARCH_LIMIT = 20
     # O valor de offset é incrementado em 20 a cada nova requisição
     offset = 0
+    index = 0
 
     comercios = list()
     localizacoes = list()
     avaliacoes = list()
     usuarios = list()
+    transacoes = list()
     
     response = search(API_KEY, location, offset)
     total_businesses = response.get('total')
@@ -140,7 +142,7 @@ def query_api(location):
     if(total_businesses == 240):
         number_of_request = response.get('total')/SEARCH_LIMIT # 240/20
 
-        for request in range(int(number_of_request)):
+        for request in range(1):
             response = search(API_KEY, location, offset)
             businesses = response.get('businesses')
 
@@ -152,19 +154,43 @@ def query_api(location):
                 response_comercio = get_business(API_KEY, business['id'])
                 response_avaliacao = get_review(API_KEY, business['id'])
 
-                comercios.append(
-                    tabela.Comercio(
-                        id = response_comercio["id"],
-                        nome = response_comercio["name"],
-                        fechado = response_comercio["is_closed"],
-                        telefone = response_comercio["phone"],
-                        preco = response_comercio["price"],
-                        pseudonimo = response_comercio["alias"],
-                        titulo_categoria = response_comercio["categories"][0]["title"],
-                        pseudonimo_categoria = response_comercio["categories"][0]["alias"],
-                        quant_avaliacoes = response_comercio["review_count"]
+                try:
+                    comercios.append(
+                        tabela.Comercio(
+                            id = response_comercio["id"],
+                            nome = response_comercio["name"],
+                            fechado = response_comercio["is_closed"],
+                            telefone = response_comercio["phone"],
+                            preco = response_comercio["price"],
+                            pseudonimo = response_comercio["alias"],
+                            titulo_categoria = response_comercio["categories"][0]["title"],
+                            pseudonimo_categoria = response_comercio["categories"][0]["alias"],
+                            quant_avaliacoes = response_comercio["review_count"]
+                        )
+                    )               
+
+                except KeyError as e:
+                    comercios.append(
+                        tabela.Comercio(
+                            id = response_comercio["id"],
+                            nome = response_comercio["name"],
+                            fechado = response_comercio["is_closed"],
+                            telefone = response_comercio["phone"],
+                            preco = None,
+                            pseudonimo = response_comercio["alias"],
+                            titulo_categoria = response_comercio["categories"][0]["title"],
+                            pseudonimo_categoria = response_comercio["categories"][0]["alias"],
+                            quant_avaliacoes = response_comercio["review_count"]
+                        )
                     )
-                )
+
+                for type in response_comercio["transactions"]:
+                    transacoes.append(
+                        tabela.Transacao(
+                            id_comercio = response_comercio["id"],
+                            tipo = type
+                        )
+                    )
 
                 localizacoes.append(
                     tabela.Localizacao(
@@ -191,19 +217,19 @@ def query_api(location):
                         )
                     )
 
-                    usuarios.append(
-                        tabela.Usuario(
-                            id = avaliacao["user"]["id"],
-                            nome = avaliacao["user"]["name"]
-                        )
+                usuarios.append(
+                    tabela.Usuario(
+                        id = avaliacao["user"]["id"],
+                        nome = avaliacao["user"]["name"]
                     )
+                )                    
 
             offset = offset + 20
     
     else:
         print("A API encontrou mais de 240 casos, precisamos tratar esse cenário")
     
-    return comercios, localizacoes, avaliacoes, usuarios
+    return comercios, transacoes, localizacoes, avaliacoes, usuarios
 
 
 def main():
@@ -216,7 +242,7 @@ def main():
     input_values = parser.parse_args()
 
     try:
-        comercios, localizacoes, avaliacoes, usuarios = query_api(input_values.location)
+        comercios, transacoes, localizacoes, avaliacoes, usuarios = query_api(input_values.location)
     except HTTPError as error:
         sys.exit(
             'Encountered HTTP error {0} on {1}:\n {2}\nAbort program.'.format(
@@ -225,11 +251,7 @@ def main():
                 error.read(),
             )
         )
-    
-    print(comercios[0].id)
-    print(localizacoes[0].id_comercio)
-    print(avaliacoes[0].id_comercio)
-    print(usuarios[0].id)
+    return comercios, usuarios, transacoes, localizacoes, avaliacoes
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+#    main()
