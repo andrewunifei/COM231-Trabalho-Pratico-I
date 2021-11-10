@@ -3,7 +3,7 @@ CREATE TABLE comercio(
 	nome varchar(255) NOT NULL,
 	fechado bool NOT NULL,
 	telefone varchar(20) NOT NULL,
-	preco varchar(4) NOT NULL,
+	preco varchar(4),
 	pseudonimo varchar(255),
 	titulo_categoria varchar(255) NOT NULL,
 	pseudonimo_categoria varchar(255),

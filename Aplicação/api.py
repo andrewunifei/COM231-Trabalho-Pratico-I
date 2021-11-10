@@ -132,6 +132,7 @@ def query_api(location):
     avaliacoes = list()
     usuarios = list()
     transacoes = list()
+    id_usuarios = list()
     
     response = search(API_KEY, location, offset)
     total_businesses = response.get('total')
@@ -142,7 +143,7 @@ def query_api(location):
     if(total_businesses == 240):
         number_of_request = response.get('total')/SEARCH_LIMIT # 240/20
 
-        for request in range(1):
+        for request in range(int(number_of_request)):
             response = search(API_KEY, location, offset)
             businesses = response.get('businesses')
 
@@ -217,12 +218,14 @@ def query_api(location):
                         )
                     )
 
-                usuarios.append(
-                    tabela.Usuario(
-                        id = avaliacao["user"]["id"],
-                        nome = avaliacao["user"]["name"]
-                    )
-                )                    
+                    if avaliacao["user"]["id"] not in id_usuarios:
+                        usuarios.append(
+                                tabela.Usuario(
+                                    id = avaliacao["user"]["id"],
+                                    nome = avaliacao["user"]["name"]
+                                )
+                        )
+                        id_usuarios.append(avaliacao["user"]["id"])                    
 
             offset = offset + 20
     
@@ -230,7 +233,6 @@ def query_api(location):
         print("A API encontrou mais de 240 casos, precisamos tratar esse cenário")
     
     return comercios, transacoes, localizacoes, avaliacoes, usuarios
-
 
 def main():
     parser = argparse.ArgumentParser()
