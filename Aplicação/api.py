@@ -136,63 +136,54 @@ def query_api():
     id_usuarios = list()
     id_avaliacoes = list()
 
-    locations = ['Seattle']
-    #'San Francisco', 'New York CIty', 'Los Angeles', 'Chicago', 
+    locations = ['San Francisco', 'New York City', 'Los Angeles', 'Chicago', 'Seattle']
 
     for location in locations:
-        response = search(API_KEY, location, offset)
+        response = search(API_KEY, location, 0)
         total_businesses = response.get('total')
 
         # Passagem dos atributos relevantes do objeto JSON
         # São necessárias várias requisições, porque a API retorna no máximo 50 objetos
         # No nosso caso vamos retornar 20 objetos a cada requisição
-        if(total_businesses == 240):
-            number_of_request = response.get('total')/SEARCH_LIMIT # 240/20
+        if(total_businesses >= 240):
+            number_of_request = 240/SEARCH_LIMIT # 240/20
 
             for request in range(int(number_of_request)):
                 response = search(API_KEY, location, offset)
                 businesses = response.get('businesses')
 
                 if not businesses:
-                    print(u'No businesses in {1} found.'.format(location))
+                    print(u'No businesses in {0} found.'.format(location))
                     return
 
                 for business in businesses:
-                    response_comercio = get_business(API_KEY, business['id'])
+                    response_comercio = business
                     response_avaliacao = get_review(API_KEY, business['id'])
 
-                    if response_comercio["id"] not in id_comercios:
-                        try:
-                            comercios.append(
-                                tabela.Comercio(
-                                    id = response_comercio["id"],
-                                    nome = response_comercio["name"],
-                                    fechado = response_comercio["is_closed"],
-                                    telefone = response_comercio["phone"],
-                                    preco = response_comercio["price"],
-                                    pseudonimo = response_comercio["alias"],
-                                    titulo_categoria = response_comercio["categories"][0]["title"],
-                                    pseudonimo_categoria = response_comercio["categories"][0]["alias"],
-                                    quant_avaliacoes = response_comercio["review_count"]
-                                )
-                            )               
-
-                        except KeyError as e:
-                            pass
-
-                    for type in response_comercio["transactions"]:
-                        try:
-                            transacoes.append(
-                                tabela.Transacao(
-                                    id_comercio = response_comercio["id"],
-                                    tipo = type
-                                )
-                            )
-
-                        except KeyError as e:
-                            pass
-
                     try:
+                        if response_comercio["id"] not in id_comercios:
+                                comercios.append(
+                                    tabela.Comercio(
+                                        id = response_comercio["id"],
+                                        nome = response_comercio["name"],
+                                        fechado = response_comercio["is_closed"],
+                                        telefone = response_comercio["phone"],
+                                        preco = response_comercio["price"],
+                                        pseudonimo = response_comercio["alias"],
+                                        titulo_categoria = response_comercio["categories"][0]["title"],
+                                        pseudonimo_categoria = response_comercio["categories"][0]["alias"],
+                                        quant_avaliacoes = response_comercio["review_count"]
+                                    )
+                                )               
+
+                        for type in response_comercio["transactions"]:
+                                transacoes.append(
+                                    tabela.Transacao(
+                                        id_comercio = response_comercio["id"],
+                                        tipo = type
+                                    )
+                                )
+
                         localizacoes.append(
                             tabela.Localizacao(
                                 id_comercio = response_comercio["id"],
@@ -205,44 +196,41 @@ def query_api():
                             )
                         )
 
-                    except KeyError as e:
-                            pass
 
-                    for avaliacao in response_avaliacao["reviews"]:
-                        try:
-                            if avaliacao["id"] not in id_avaliacoes:
-                                avaliacoes.append(
-                                    tabela.Avaliacao(
-                                        id_comercio = response_comercio["id"],
-                                        id_usuario = avaliacao["user"]["id"],
-                                        id = avaliacao["id"],
-                                        nota = avaliacao["rating"],
-                                        texto = avaliacao["text"],
-                                        data = avaliacao["time_created"].split()[0],
-                                        horario = avaliacao["time_created"].split()[1]
-                                    )
-                                )
-                                id_avaliacoes.append(avaliacao["id"])
-                        
-                        except KeyError as e:
-                            pass
-
-                        try:
-                            if avaliacao["user"]["id"] not in id_usuarios:
-                                usuarios.append(
-                                        tabela.Usuario(
-                                            id = avaliacao["user"]["id"],
-                                            nome = avaliacao["user"]["name"]
+                        for avaliacao in response_avaliacao["reviews"]:
+                                if avaliacao["id"] not in id_avaliacoes:
+                                    avaliacoes.append(
+                                        tabela.Avaliacao(
+                                            id_comercio = response_comercio["id"],
+                                            id_usuario = avaliacao["user"]["id"],
+                                            id = avaliacao["id"],
+                                            nota = avaliacao["rating"],
+                                            texto = avaliacao["text"],
+                                            data = avaliacao["time_created"].split()[0],
+                                            horario = avaliacao["time_created"].split()[1]
                                         )
-                                )
-                                id_usuarios.append(avaliacao["user"]["id"]) 
-                        except KeyError as e:
-                            pass                   
+                                    )
+                                    id_avaliacoes.append(avaliacao["id"])
+
+                                if avaliacao["user"]["id"] not in id_usuarios:
+                                    usuarios.append(
+                                            tabela.Usuario(
+                                                id = avaliacao["user"]["id"],
+                                                nome = avaliacao["user"]["name"]
+                                            )
+                                    )
+                                    id_usuarios.append(avaliacao["user"]["id"])
+                            
+                    except KeyError as e:
+                        pass
+                   
 
                 offset = offset + 20
         
         else:
             print("A API encontrou mais de 240 casos, precisamos tratar esse cenário")
+
+        offset = 0
     
     return comercios, transacoes, localizacoes, avaliacoes, usuarios
 
