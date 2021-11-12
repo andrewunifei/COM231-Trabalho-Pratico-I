@@ -1,19 +1,6 @@
 # Para rodar o requisito.txt: pip install -r requisito.txt 
 
 # -*- coding: utf-8 -*-
-"""
-Yelp Fusion API code sample.
-This program demonstrates the capability of the Yelp Fusion API
-by using the Search API to query for businesses by a search term and location,
-and the Business API to query additional information about the top result
-from the search query.
-Please refer to http://www.yelp.com/developers/v3/documentation for the API
-documentation.
-This program requires the Python requests library, which you can install via:
-`pip install -r requirements.txt`.
-Sample usage of the program:
-`python sample.py --term="bars" --location="San Francisco, CA"`
-"""
 from __future__ import print_function
 
 import argparse
@@ -24,39 +11,18 @@ import sys
 import urllib
 import mapeamento as tabela
 
+from urllib.error import HTTPError
+from urllib.parse import quote
+from urllib.parse import urlencode
 
-# This client code can run on Python 2.x or 3.x.  Your imports can be
-# simpler if you only need one of those.
-try:
-    # For Python 3.0 and later
-    from urllib.error import HTTPError
-    from urllib.parse import quote
-    from urllib.parse import urlencode
-except ImportError:
-    # Fall back to Python 2's urllib2 and urllib
-    from urllib2 import HTTPError
-    from urllib import quote
-    from urllib import urlencode
+API_KEY="jP_sZ5s35vlKdCW0Pa-85OSQg-O-1PGHJUPbyM4y_bjpxrLEJmr4kzLtpHTzLRaWZ79n3NPOMUUrmB2Qq3oQ3Cn_RsMktpBDB1ipnDAgskGaI4iSmYmx80ewhLqFYXYx"
 
-
-# Yelp Fusion no longer uses OAuth as of December 7, 2017.
-# You no longer need to provide Client ID to fetch Data
-# It now uses private keys to authenticate requests (API Key)
-# You can find it on
-# https://www.yelp.com/developers/v3/manage_app
-API_KEY="jP_sZ5s35vlKdCW0Pa-85OSQg-O-1PGHJUPbyM4y_bjpxrLEJmr4kzLtpHTzLRaWZ79n3NPOMUUrmB2Qq3oQ3Cn_RsMktpBDB1ipnDAgskGaI4iSmYmx80ewhLqFYXYx" 
-
-
-# API constants, you shouldn't have to change these.
+# API constants
 API_HOST = 'https://api.yelp.com'
 SEARCH_PATH = '/v3/businesses/search'
 BUSINESS_PATH = '/v3/businesses/'  # Business ID will come after slash.
 REVIEW_PATH = '/v3/businesses/{0}/reviews' # Para consultar as avaliações
 
-
-# Defaults for our simple example.
-DEFAULT_TERM = 'dinner'
-DEFAULT_LOCATION = 'San Francisco, CA'
 SEARCH_LIMIT = 20
 
 def request(host, path, api_key, url_params=None):
@@ -124,7 +90,6 @@ def query_api():
     # No nosso caso SEARCH_LIMIT = 20
     # O valor de offset é incrementado em 20 a cada nova requisição
     offset = 0
-    index = 0
 
     comercios = list()
     localizacoes = list()
@@ -196,7 +161,6 @@ def query_api():
                             )
                         )
 
-
                         for avaliacao in response_avaliacao["reviews"]:
                                 if avaliacao["id"] not in id_avaliacoes:
                                     avaliacoes.append(
@@ -223,12 +187,11 @@ def query_api():
                             
                     except KeyError as e:
                         pass
-                   
 
                 offset = offset + 20
         
         else:
-            print("A API encontrou mais de 240 casos, precisamos tratar esse cenário")
+            pass
 
         offset = 0
     
@@ -245,7 +208,5 @@ def main():
                 error.read(),
             )
         )
-    return comercios, usuarios, transacoes, localizacoes, avaliacoes
 
-#if __name__ == '__main__':
-#    main()
+    return comercios, usuarios, transacoes, localizacoes, avaliacoes

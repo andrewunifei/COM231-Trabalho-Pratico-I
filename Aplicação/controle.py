@@ -2,7 +2,6 @@ import api
 from view import View
 from modelo import manipulaBanco
 
-
 class Controle:
     def inicio(self):
         comercios, usuarios, transacoes, localizacoes, avaliacoes = api.main()
