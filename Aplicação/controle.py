@@ -11,8 +11,6 @@ class Controle:
     def __init__(self):
         self.view = View()
 
-# DELETAR ANTES DE EXECUTAR
-
 if __name__ == "__main__":
     main = Controle()
     main.inicio()
