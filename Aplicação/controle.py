@@ -1,6 +1,6 @@
 import api
 from view import View
-from modelo import manipulaBanco
+from modelo import manipulaBanco 
 
 class Controle:
     def inicio(self):
