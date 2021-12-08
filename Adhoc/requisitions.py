@@ -20,7 +20,4 @@ def table_sizes(table_name, wholedb=False):
     
     return t
 
-if __name__ == "__main__":
-    t = table_sizes("Comercio")
-    print(t["size"])
-    print(t["total"])
+# if __name__ == "__main__":
