@@ -26,7 +26,7 @@ class MyGUI:
         self.box1 = tk.StringVar()
         self.box1.trace('w', self.update)
         self.box2 = tk.StringVar()
-
+        
         # Ajusta os IntVar objetos para 0
         self.cbVar1.set(0)
         self.cbVar2.set(0)
@@ -34,7 +34,9 @@ class MyGUI:
         self.cbVar4.set(0)
         self.cbVar5.set(0)
         self.cbVar6.set(0)
-        
+
+        self.listaAtributos2 = []
+
         # FrameLeft
         self.txt01 = tk.Label(self.frameLeft, text='Selecione a tabela: ')
         self.txt01.grid(column=0, row=0)
@@ -57,9 +59,11 @@ class MyGUI:
 
         self.buttonInserir = tk.Button(self.frameLeft, text="Selecionar")
         self.buttonInserir.grid(column=0, row=5)
+        self.buttonInserir.bind("<Button>", self.insereAtributo)
 
         self.buttonTirar = tk.Button(self.frameLeft, text="Remover")
         self.buttonTirar.grid(column=1, row=5)
+        self.buttonTirar.bind("<Button>", self.removeAtributo)
 
         # FrameRight
         self.txt1 = tk.Label(self.frameRight, text='Filtros')
@@ -86,14 +90,6 @@ class MyGUI:
         self.txt00 = tk.Label(self.frameRight, text=' ')
         self.txt00.grid(column=0, row=3, sticky='W')
 
-        self.txt3 = tk.Label(self.frameRight, text='Ordenação ')
-        self.txt3.grid(column=1, row=4, sticky='W')
-
-        self.combobox2 = ttk.Combobox(self.frameRight, width=15, textvariable=self.box2)
-        self.combobox2.grid(column=2, row=4, sticky='W')
-        self.combobox2['values'] = ['Desordenado', 'Ascendente', 'Descendente']
-        self.combobox2.current(0)
-
         self.txt0 = tk.Label(self.frameRight, text=' ')
         self.txt0.grid(column=0, row=5, sticky='W')
 
@@ -119,7 +115,7 @@ class MyGUI:
 
         self.txtSenha = tk.Label(self.frameRight, text='Senha: ')
         self.txtSenha.grid(column=3, row=8, sticky='W')
-        self.inputSenha = tk.Entry(self.frameRight, width=15)
+        self.inputSenha = tk.Entry(self.frameRight, show= '*', width=15)
         self.inputSenha.grid(column=3, row=9, sticky='W')
 
         self.buttonGerar = tk.Button(self.frameRight, text="Gerar", command=self.Gerar)
@@ -137,6 +133,7 @@ class MyGUI:
 
     def update(self, var, indx, mode):
         self.listbox.delete(0, tk.END)
+        self.listbox2.delete(0, tk.END)
         tabelaSel = self.box1.get()
         if(tabelaSel == 'Avaliação'):
            listaAtributos = ['ID do Comércio', 'ID do Usuário', 'ID', 'Nota', 'Texto', 'Data', 'Horário']
@@ -151,11 +148,25 @@ class MyGUI:
         for titulo in listaAtributos:
            self.listbox.insert(tk.END, titulo)
 
-    # Função de callback para o okButton    
+    def insereAtributo(self, event):
+        atributoSel = self.listbox.get(tk.ACTIVE)
+        self.listbox.delete(tk.ACTIVE)
+        self.insereListBox2(atributoSel)
+
+    def insereListBox2(self, atributo):
+        self.listbox2.insert(tk.END, atributo)
+
+    def removeAtributo(self, event):
+        atributoSel = self.listbox2.get(tk.ACTIVE)
+        self.listbox2.delete(tk.ACTIVE)
+        self.insereListBox(atributoSel)
+
+    def insereListBox(self, atributo):
+        self.listbox.insert(tk.END, atributo)
+
     def Gerar(self):
-        # Verifica quais CheckButtons foram selecionados
-        self.tabela = self.combobox1.get()
-        if(self.tabela == ''):
+        tabela = self.combobox1.get()
+        if(tabela == ''):
             messagebox.showerror('ERRO!', 'Selecione uma tabela!')
         else:
             self.dicFiltro = {}
@@ -171,16 +182,16 @@ class MyGUI:
             else:
                 self.dicFiltro['limite'] = None
 
-            self.dicFiltro['ordem'] = self.box2.get()
-
             self.listaExibir.append(self.cbVar3.get())
             self.listaExibir.append(self.cbVar4.get())
             self.listaExibir.append(self.cbVar5.get())
             self.listaExibir.append(self.cbVar6.get())
             
-            print(self.tabela)
-            print(self.dicFiltro)
-            print(self.listaExibir)
+            user = self.inputUser.get()
+            senha = self.inputSenha.get()
+            atributos = list(self.listbox2.get(0, tk.END))
+
+            return user, senha, tabela, self.listaExibir, self.dicFiltro, atributos
 
 def main():
     MyGUI()
