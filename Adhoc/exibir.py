@@ -1,14 +1,6 @@
 from sqlalchemy import MetaData
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from mapeamento import *
-
-def getTable(nome_tabela):
-    if nome_tabela == "Comercio": return Comercio
-    elif nome_tabela == "Usuario": return Usuario
-    elif nome_tabela == "Avaliacao": return Avaliacao
-    elif nome_tabela == "Localizacao": return Localizacao
-    else: return Transacao
+from getTable import getTable
 
 def dbCount(session):
     tables = [Comercio, Usuario, Avaliacao, Localizacao, Transacao]
@@ -24,7 +16,7 @@ def tableCount(table, session):
     return session.query(table).count()
 
 
-def tableSize(dburi, nome_tabela, wholedb):
+def tableSize(dburi, table_name, wholedb):
     # Função para consultar o tamanho em bytes de uma tabela e/ou do banco todo
 
     t = dict()
@@ -35,7 +27,7 @@ def tableSize(dburi, nome_tabela, wholedb):
     q_pretty_total = "SELECT pg_size_pretty(pg_database_size('yelp'))"
 
     # A função pretty retorna o tamanho como "human-readable"
-    t['size'] = e(q_pretty_size % nome_tabela) # Une a string ao nome_tabela
+    t['size'] = e(q_pretty_size % table_name) # Une a string ao table_name
 
     if wholedb:
         t['total'] = e(q_pretty_total)
@@ -44,16 +36,16 @@ def tableSize(dburi, nome_tabela, wholedb):
     
     return t
 
-def bootloader_exibir(session, dburi, nome_tabela, valores_exibir):
+def bootloader_exibir(session, dburi, table_name, valores_exibir):
     info = {}
     
-    if valores_exibir[0]: info['tableCount'] = tableCount(getTable(nome_tabela), session)
+    if valores_exibir[0]: info['tableCount'] = tableCount(getTable(table_name), session)
     else: info['tableCount'] = None
 
     if valores_exibir[1]: info['dbCount'] = dbCount(session)
     else: info['dbCount'] = None
 
-    if valores_exibir[2]: info['tableSize'] = tableSize(dburi, nome_tabela, valores_exibir[3])
+    if valores_exibir[2]: info['tableSize'] = tableSize(dburi, table_name, valores_exibir[3])
     else: info['tableSize'] = None
 
     session.close()
