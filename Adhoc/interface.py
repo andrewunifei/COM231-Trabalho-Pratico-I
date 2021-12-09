@@ -7,7 +7,7 @@ class MyGUI:
     def __init__(self):
         self.janela = tk.Tk()
         self.janela.title('Relatório Ad-Hoc')
-        self.janela.geometry('820x300')
+        self.janela.geometry('1025x340')
         #self.janela.eval('tk::PlaceWindow . center')
 
         # Cria dois frames, um para os checkbuttons
