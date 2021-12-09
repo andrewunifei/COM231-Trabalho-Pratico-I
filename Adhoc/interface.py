@@ -10,15 +10,10 @@ class MyGUI:
         self.janela = tk.Tk()
         self.janela.title('Relatório Ad-Hoc')
         self.janela.geometry('1025x340')
-        #self.janela.eval('tk::PlaceWindow . center')
-
-        # Cria dois frames, um para os checkbuttons
-        # e outro para o botão
+    
         self.frameRight = tk.Frame(self.janela)
         self.frameLeft = tk.Frame(self.janela)
-
-        
-        # Cria 3 objetos IntVar para usar com os checkbuttons    
+  
         self.cbVar1 = tk.IntVar()
         self.cbVar2 = tk.IntVar()
         self.cbVar3 = tk.IntVar()
