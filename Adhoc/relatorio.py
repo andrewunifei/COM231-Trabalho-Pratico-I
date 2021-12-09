@@ -21,7 +21,7 @@ class Relatorio:
         scrollbar2.pack(side = BOTTOM, fill = X)
 
         #TEXTO SUPERIOR
-        self.txt01 = tk.Label(root, text='Mussum Ipssum')
+        self.txt01 = tk.Label(root, text=self.info_exibir['tableCount'])
         self.txt01.pack()
         self.txt02 = tk.Label(root, text='Mussum Ipssum')
         self.txt02.pack()
@@ -99,7 +99,7 @@ class Relatorio:
         tk.mainloop()
 
 
-def main():
-    Relatorio([], [])
+# def main():
+#     Relatorio([], [])
 
-main()
+# main()

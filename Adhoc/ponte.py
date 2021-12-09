@@ -17,4 +17,6 @@ def main(user,  senha, nome_tabela, valores_exibir):
     info_exibir = bootloader_exibir(session, dburi, nome_tabela, valores_exibir)
     info_filtros = bootloader_filtros(session, nome_tabela)
 
+    session.close()
+
     return info_exibir, info_filtros

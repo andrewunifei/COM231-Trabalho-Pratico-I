@@ -48,6 +48,4 @@ def bootloader_exibir(session, dburi, table_name, valores_exibir):
     if valores_exibir[2]: info['tableSize'] = tableSize(dburi, table_name, valores_exibir[3])
     else: info['tableSize'] = None
 
-    session.close()
-
     return info
