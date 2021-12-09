@@ -11,16 +11,10 @@ def getSession(user, senha):
 
     return session, dburi
 
-def insere(sessao, obj):
-    sessao.add(obj)
-
-def deleta(session, obj):
-    session.delete(obj)
-
-def main(user,  senha, nome_tabela, valores_exibir, valores_filtros, lista_atributos):
+def main(user,  senha, nome_tabela, valores_exibir):
     session, dburi = getSession(user, senha) 
 
     info_exibir = bootloader_exibir(session, dburi, nome_tabela, valores_exibir)
-    info_filtros = bootloader_filtros(session, nome_tabela, valores_filtros)
+    info_filtros = bootloader_filtros(session, nome_tabela)
 
     return info_exibir, info_filtros

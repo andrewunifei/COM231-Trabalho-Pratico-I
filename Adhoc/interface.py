@@ -188,7 +188,7 @@ class MyGUI:
             senha = self.inputSenha.get()
             atributos = list(self.listbox2.get(0, tk.END))
 
-            info_exbir, info_filtros = main(user, senha, tabela, self.listaExibir, self.dicFiltro, atributos)
+            info_exbir, info_filtros = main(user, senha, tabela, self.listaExibir, self.dicFiltro)
             Relatorio(info_exbir, info_filtros)
 
 def main():
