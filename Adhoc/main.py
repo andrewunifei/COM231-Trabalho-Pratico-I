@@ -6,7 +6,7 @@ from tkinter.constants import LEFT
 class MyGUI:
     def __init__(self):
         self.janela = tk.Tk()
-        self.janela.geometry('550x275')
+        self.janela.geometry('650x275')
         self.janela.eval('tk::PlaceWindow . center')
 
         # Cria dois frames, um para os checkbuttons

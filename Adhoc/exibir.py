@@ -41,20 +41,29 @@ def tableSize(table_name, wholedb):
 
     if wholedb:
         t['total'] = e(q_pretty_total)
+    else:
+        t['total'] = None
     
     return t
 
-def bootloader(table_name, wholedb, criterios):
+def bootloader(table_name, criterios):
     engine = create_engine("postgresql+psycopg2://postgres:123@localhost:5432/yelp", echo=False)
     Session = sessionmaker(bind=engine)
     session = Session()
     info = {}
+    
+    if criterios[0]: info['tableCount'] = tableCount(getTable(table_name), session)
+    else: info['tableCount'] = None
 
-    info['tableCount'] = tableCount(getTable(table_name), session)
-    info['dbCount'] = dbCount(session)
-    info['tableSize'] = tableSize(table_name, wholedb)
+    if criterios[1]: info['dbCount'] = dbCount(session)
+    else: info['dbCount'] = None
+
+    if criterios[2]: info['tableSize'] = tableSize(table_name, criterios[3])
+    else: info['tableSize'] = None
 
     session.close()
+
+    return info
 
 if __name__ == "__main__":
     bootloader()
