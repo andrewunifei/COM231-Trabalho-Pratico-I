@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.constants import LEFT
+from ponte import main
+from relatorio import Relatorio
 
 class MyGUI:
     def __init__(self):
@@ -191,7 +193,8 @@ class MyGUI:
             senha = self.inputSenha.get()
             atributos = list(self.listbox2.get(0, tk.END))
 
-            return user, senha, tabela, self.listaExibir, self.dicFiltro, atributos
+            info_exbir, info_filtros = main(user, senha, tabela, self.listaExibir, self.dicFiltro, atributos)
+            Relatorio(info_exbir, info_filtros)
 
 def main():
     MyGUI()
