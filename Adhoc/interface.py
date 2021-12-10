@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.constants import LEFT
-from ponte import main
+from ponte import ponte
 from relatorio import Relatorio
 
 class MyGUI:
@@ -93,10 +92,10 @@ class MyGUI:
         self.txt4 = tk.Label(self.frameRight, text='Exibir ')
         self.txt4.grid(column=1, row=6, sticky='W')
 
-        self.cb3 = tk.Checkbutton(self.frameRight, text='Número total de linhas', variable=self.cbVar3)
+        self.cb3 = tk.Checkbutton(self.frameRight, text='Total de registro na tabela', variable=self.cbVar3)
         self.cb3.grid(column=1, row=7, sticky='W')
 
-        self.cb3 = tk.Checkbutton(self.frameRight, text='Total de registros de banco', variable=self.cbVar4)
+        self.cb3 = tk.Checkbutton(self.frameRight, text='Total de registros no banco', variable=self.cbVar4)
         self.cb3.grid(column=1, row=8, sticky='W')
 
         self.cb3 = tk.Checkbutton(self.frameRight, text='Tamanho em bytes da tabela', variable=self.cbVar5)
@@ -188,7 +187,7 @@ class MyGUI:
             senha = self.inputSenha.get()
             atributos = list(self.listbox2.get(0, tk.END))
 
-            info_exbir, info_filtros = main(user, senha, tabela, self.listaExibir, self.dicFiltro)
+            info_exbir, info_filtros = ponte(user, senha, tabela, self.listaExibir, self.dicFiltro)
             Relatorio(info_exbir, info_filtros)
 
 def main():
