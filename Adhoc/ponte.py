@@ -11,11 +11,11 @@ def getSession(user, senha):
 
     return session, dburi
 
-def main(user,  senha, nome_tabela, valores_exibir):
+def main(user,  senha, nome_tabela, valores_exibir, valores_filtros):
     session, dburi = getSession(user, senha) 
 
     info_exibir = bootloader_exibir(session, dburi, nome_tabela, valores_exibir)
-    info_filtros = bootloader_filtros(session, nome_tabela)
+    info_filtros = bootloader_filtros(session, nome_tabela, valores_filtros)
 
     session.close()
 
