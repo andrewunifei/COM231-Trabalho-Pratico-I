@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Scrollbar
-from tkinter.constants import CENTER, NO, RIGHT, BOTTOM, X, Y
+from tkinter.constants import CENTER, NO, RIGHT, BOTTOM, X, Y, BOTH
 
 class Relatorio:
     def __init__(self, info_exibir, d, atributos):
@@ -11,7 +11,7 @@ class Relatorio:
 
         root = tk.Tk()
         root.title('Relatório')
-        root.geometry('1000x500')
+        root.geometry('1000x400')
 
         #BARRA DE ROLAGEM VERTICAL
         scrollbarY = Scrollbar(root)
@@ -21,6 +21,8 @@ class Relatorio:
         scrollbarX = Scrollbar(root, orient='horizontal')
         scrollbarX.pack(side = BOTTOM, fill = X)
 
+        self.txt00 = tk.Label(root, text='')
+        self.txt00.pack()
         #TEXTO SUPERIOR
         if(self.info_exibir['tableCount'] != None):
             self.txt01 = tk.Label(root, text='Total de registros na tabela: ' + str(self.info_exibir['tableCount']))
@@ -34,6 +36,8 @@ class Relatorio:
         if(self.info_exibir['dbSize'] != None):
             self.txt04 = tk.Label(root, text='Tamanho em bytes do banco: ' + str(self.info_exibir['dbSize']))
             self.txt04.pack()
+        self.txt000 = tk.Label(root, text='')
+        self.txt000.pack()
 
         #TABELA (DEFINIR yscrollcommand E xscrollcommand)
         tabela = ttk.Treeview(root, yscrollcommand = scrollbarY.set, xscrollcommand = scrollbarX.set)
@@ -59,7 +63,7 @@ class Relatorio:
             id += 1
             registros = []
 
-        tabela.pack()
+        tabela.pack(fill=Y,expand=1)
 
         #CONFIGURAR BARRAS DE ROLAGEM NA TABELA
         scrollbarY.config(command = tabela.yview)
