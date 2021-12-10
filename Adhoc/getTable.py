@@ -1,10 +1,10 @@
 from mapeamento import *
 
 def getTable(table_name):
-    if table_name == "Comercio": return Comercio
-    elif table_name == "Usuario": return Usuario
-    elif table_name == "Avaliacao": return Avaliacao
-    elif table_name == "Localizacao": return Localizacao
+    if table_name == "Comércio": return Comercio
+    elif table_name == "Avaliação": return Avaliacao
+    elif table_name == "Localização": return Localizacao
+    elif table_name == "Usuário": return Usuario
     else: return Transacao
 
 def corrigeNome(table_name):

@@ -4,13 +4,14 @@ from tkinter import Scrollbar
 from tkinter.constants import CENTER, NO, RIGHT, BOTTOM, X, Y
 
 class Relatorio:
-    def __init__(self, info_exibir, info_filtros):
+    def __init__(self, info_exibir, d, atributos):
         self.info_exibir = info_exibir
-        self.info_filtros = info_filtros
+        self.d = d
+        self.atributos = atributos
 
         root = tk.Tk()
         root.title('Relatório')
-        self.janela.geometry('1000x500')
+        root.geometry('1000x500')
 
         #BARRA DE ROLAGEM VERTICAL
         scrollbarY = Scrollbar(root)
@@ -22,79 +23,41 @@ class Relatorio:
 
         #TEXTO SUPERIOR
         if(self.info_exibir['tableCount'] != None):
-            self.txt01 = tk.Label(root, text='Total de registro na tabela: ' + self.info_exibir['tableCount'])
+            self.txt01 = tk.Label(root, text='Total de registros na tabela: ' + str(self.info_exibir['tableCount']))
             self.txt01.pack()
         if(self.info_exibir['dbCount'] != None):
-            self.txt02 = tk.Label(root, text='Total de registros no banco: ' + self.info_exibir['dbCount'])
+            self.txt02 = tk.Label(root, text='Total de registros no banco: ' + str(self.info_exibir['dbCount']))
             self.txt02.pack()
         if(self.info_exibir['tableSize'] != None):
-            self.txt03 = tk.Label(root, text='Tamanho em bytes da tabela: ' + self.info_exibir['tableSize'])
+            self.txt03 = tk.Label(root, text='Tamanho em bytes da tabela: ' + str(self.info_exibir['tableSize']))
             self.txt03.pack()
         if(self.info_exibir['dbSize'] != None):
-            self.txt04 = tk.Label(root, text='Tamanho em bytes do banco: ' + self.info_exibir['dbSize'])
+            self.txt04 = tk.Label(root, text='Tamanho em bytes do banco: ' + str(self.info_exibir['dbSize']))
             self.txt04.pack()
 
         #TABELA (DEFINIR yscrollcommand E xscrollcommand)
         tabela = ttk.Treeview(root, yscrollcommand = scrollbarY.set, xscrollcommand = scrollbarX.set)
 
-        tabela['columns'] = ('player_id', 'player_name', 'player_Rank', 'player_states', 'player_city')
+        tabela['columns'] = [atributo for atributo in self.atributos]
 
         tabela.column("#0", width=0,  stretch=NO)
-        tabela.column("player_id",anchor=CENTER, width=80)
-        tabela.column("player_name",anchor=CENTER,width=80)
-        tabela.column("player_Rank",anchor=CENTER,width=80)
-        tabela.column("player_states",anchor=CENTER,width=80)
-        tabela.column("player_city",anchor=CENTER,width=80)
-
+        for atributo in self.atributos:
+            tabela.column(atributo,anchor=CENTER)
+        
         tabela.heading("#0",text="",anchor=CENTER)
-        tabela.heading("player_id",text="Id",anchor=CENTER)
-        tabela.heading("player_name",text="Name",anchor=CENTER)
-        tabela.heading("player_Rank",text="Rank",anchor=CENTER)
-        tabela.heading("player_states",text="States",anchor=CENTER)
-        tabela.heading("player_city",text="States",anchor=CENTER)
+        for atributo in self.atributos:
+            tabela.heading(atributo,text=atributo,anchor=CENTER)
 
-        tabela.insert(parent='',index='end',iid=0,text='',
-        values=('1','Ninja','101','Oklahoma', 'Moore'))
-        tabela.insert(parent='',index='end',iid=1,text='',
-        values=('2','Ranger','102','Wisconsin', 'Green Bay'))
-        tabela.insert(parent='',index='end',iid=2,text='',
-        values=('3','Deamon','103', 'California', 'Placentia'))
-        tabela.insert(parent='',index='end',iid=3,text='',
-        values=('4','Dragon','104','New York' , 'White Plains'))
-        tabela.insert(parent='',index='end',iid=4,text='',
-        values=('5','CrissCross','105','California', 'San Diego'))
-        tabela.insert(parent='',index='end',iid=5,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=6,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=7,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=8,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=9,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=10,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=11,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=12,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=13,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=14,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=15,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=16,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=17,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=18,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=19,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-        tabela.insert(parent='',index='end',iid=20,text='',
-        values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
+        chaves = list(self.d.keys())
+        registros = []
+        id = 0
+
+        for i in range(len(self.d[chaves[0]])):
+            for chave in chaves:
+                registros.append(self.d[chave][i])
+            tabela.insert(parent='', index='end', iid=id, text='', values=registros)
+            id += 1
+            registros = []
 
         tabela.pack()
 

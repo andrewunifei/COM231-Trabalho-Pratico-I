@@ -31,6 +31,7 @@ class MyGUI:
         self.cbVar5.set(0)
         self.cbVar6.set(0)
 
+        self.listaAtributos = []
         self.listaAtributos2 = []
 
         # FrameLeft
@@ -117,7 +118,7 @@ class MyGUI:
         self.buttonGerar = tk.Button(self.frameRight, text="Gerar", command=self.Gerar)
         self.buttonGerar.grid(column=2, row=11, sticky='E')
 
-        self.buttonLimpar = tk.Button(self.frameRight, text="Limpar")
+        self.buttonLimpar = tk.Button(self.frameRight, text="Limpar", command=self.Limpar)
         self.buttonLimpar.grid(column=3, row=11, sticky='W')
 
         # Empacota os frames
@@ -132,16 +133,28 @@ class MyGUI:
         self.listbox2.delete(0, tk.END)
         tabelaSel = self.box1.get()
         if(tabelaSel == 'Avaliação'):
-           listaAtributos = ['ID do Comércio', 'ID do Usuário', 'ID', 'Nota', 'Texto', 'Data', 'Horário']
-        elif(tabelaSel == 'Comércio'):
-           listaAtributos = ['ID', 'Nome', 'Fechado', 'Telefone', 'Preço', 'Pseudônimo', 'Título da Categoria', 'Pseudônimo da Categoria', 'Quantidade de Avaliações']
+           self.listaAtributos = ['id_comercio', 'id_usuario', 'id', 'nota', 'texto', 'data', 'horario']
+           self.cb1.config(state='normal')
+           self.inputData1.config(state='normal')
+           self.txt2.config(state='normal')
+           self.inputData2.config(state='normal')
+        else:
+           self.cbVar1.set(0)
+           self.inputData1.delete(0, tk.END)
+           self.inputData2.delete(0, tk.END)
+           self.cb1.config(state='disabled')
+           self.inputData1.config(state='disabled')
+           self.txt2.config(state='disabled')
+           self.inputData2.config(state='disabled')
+        if(tabelaSel == 'Comércio'):
+           self.listaAtributos = ['id', 'nome', 'fechado', 'telefone', 'preco', 'pseudonimo', 'titulo_categoria', 'pseudonimo_categoria', 'quant_avaliacoes']
         elif(tabelaSel == 'Localização'):
-           listaAtributos = ['ID do Comércio', 'ID', 'Código Postal', 'País', 'Estado', 'Cidade', 'Logradouro']
+           self.listaAtributos = ['id_comercio', 'id', 'cod_postal', 'pais', 'estado', 'cidade', 'logradouro']
         elif(tabelaSel == 'Transação'):
-           listaAtributos = ['ID do Comércio', 'ID', 'Tipo']
+           self.listaAtributos = ['id_comercio', 'id', 'tipo']
         elif(tabelaSel == 'Usuário'):
-           listaAtributos = ['ID', 'Nome']
-        for titulo in listaAtributos:
+           self.listaAtributos = ['id', 'nome']
+        for titulo in self.listaAtributos:
            self.listbox.insert(tk.END, titulo)
 
     def insereAtributo(self, event):
@@ -187,9 +200,31 @@ class MyGUI:
             senha = self.inputSenha.get()
             atributos = list(self.listbox2.get(0, tk.END))
 
-            info_exbir, info_filtros = ponte(user, senha, tabela, self.listaExibir, self.dicFiltro)
-            Relatorio(info_exbir, info_filtros)
+            info_exibir, info_filtros = ponte(user, senha, tabela, self.listaExibir, self.dicFiltro)
+            d = dict()
+            
+            for atributo in atributos:
+                d[atributo] = []
+                for registro in info_filtros:
+                    d[atributo].append(getattr(registro, atributo))
+            Relatorio(info_exibir, d, atributos)
 
+    def Limpar(self):
+        self.cbVar1.set(0)
+        self.cbVar2.set(0)
+        self.cbVar3.set(0)
+        self.cbVar4.set(0)
+        self.cbVar5.set(0)
+        self.cbVar6.set(0)
+        self.inputData1.delete(0, tk.END)
+        self.inputData2.delete(0, tk.END)
+        self.inputData3.delete(0, tk.END)
+        self.inputUser.delete(0, tk.END)
+        self.inputSenha.delete(0, tk.END)
+        self.box1.set('')
+        self.listbox.delete(0, tk.END)
+        self.listbox2.delete(0, tk.END)
+    
 def main():
     MyGUI()
 
