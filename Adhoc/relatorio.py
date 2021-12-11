@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Scrollbar
-from tkinter.constants import CENTER, NO, RIGHT, BOTTOM, X, Y, BOTH
+from tkinter.constants import CENTER, NO, RIGHT, BOTTOM, X, Y, LEFT
 
 class Relatorio:
     def __init__(self, info_exibir, d, atributos):

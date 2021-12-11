@@ -66,22 +66,22 @@ class MyGUI:
         self.txt1 = tk.Label(self.frameRight, text='Filtros')
         self.txt1.grid(column=1, row=0, sticky='W')
 
-        self.cb1 = tk.Checkbutton(self.frameRight, text='Data de ', variable=self.cbVar1)
+        self.cb1 = tk.Checkbutton(self.frameRight, text='Data de ', variable=self.cbVar1, command=self.handleCampoData)
         self.cb1.grid(column=1, row=1, sticky='W')
 
-        self.inputData1 = tk.Entry(self.frameRight, width=15)
+        self.inputData1 = tk.Entry(self.frameRight, width=15, state='disabled')
         self.inputData1.grid(column=2, row=1, sticky='W')
 
         self.txt2 = tk.Label(self.frameRight, text=' até ')
         self.txt2.grid(column=3, row=1, sticky='W')
 
-        self.inputData2 = tk.Entry(self.frameRight, width=15)
+        self.inputData2 = tk.Entry(self.frameRight, width=15, state='disabled')
         self.inputData2.grid(column=4, row=1, sticky='W')
 
-        self.cb2 = tk.Checkbutton(self.frameRight, text='Limite de linhas ', variable=self.cbVar2)
+        self.cb2 = tk.Checkbutton(self.frameRight, text='Limite de linhas ', variable=self.cbVar2, command=self.handleCampoLimite)
         self.cb2.grid(column=1, row=2, sticky='W')
 
-        self.inputData3 = tk.Entry(self.frameRight, width=15)
+        self.inputData3 = tk.Entry(self.frameRight, width=15, state='disabled')
         self.inputData3.grid(column=2, row=2, sticky='W')
 
         self.txt00 = tk.Label(self.frameRight, text=' ')
@@ -105,7 +105,7 @@ class MyGUI:
         self.cb3 = tk.Checkbutton(self.frameRight, text='Tamanho em bytes do banco', variable=self.cbVar6)
         self.cb3.grid(column=1, row=10, sticky='W')
 
-        self.txtUser = tk.Label(self.frameRight, text='Usuário: ')
+        self.txtUser = tk.Label(self.frameRight, text='Usuário do BD: ')
         self.txtUser.grid(column=3, row=6, sticky='W')
         self.inputUser = tk.Entry(self.frameRight, width=15)
         self.inputUser.grid(column=3, row=7, sticky='W')
@@ -135,17 +135,13 @@ class MyGUI:
         if(tabelaSel == 'Avaliação'):
            self.listaAtributos = ['id_comercio', 'id_usuario', 'id', 'nota', 'texto', 'data', 'horario']
            self.cb1.config(state='normal')
-           self.inputData1.config(state='normal')
            self.txt2.config(state='normal')
-           self.inputData2.config(state='normal')
         else:
            self.cbVar1.set(0)
            self.inputData1.delete(0, tk.END)
            self.inputData2.delete(0, tk.END)
            self.cb1.config(state='disabled')
-           self.inputData1.config(state='disabled')
            self.txt2.config(state='disabled')
-           self.inputData2.config(state='disabled')
         if(tabelaSel == 'Comércio'):
            self.listaAtributos = ['id', 'nome', 'fechado', 'telefone', 'preco', 'pseudonimo', 'titulo_categoria', 'pseudonimo_categoria', 'quant_avaliacoes']
         elif(tabelaSel == 'Localização'):
@@ -156,6 +152,21 @@ class MyGUI:
            self.listaAtributos = ['id', 'nome']
         for titulo in self.listaAtributos:
            self.listbox.insert(tk.END, titulo)
+    
+    def handleCampoData(self):
+        if self.cbVar1.get() == 0:
+            self.inputData1.config(state='disabled')
+            self.inputData2.config(state='disabled')
+        else:
+            self.inputData1.config(state='normal')
+            self.inputData2.config(state='normal')
+
+    def handleCampoLimite(self):
+        if self.cbVar2.get() == 0:
+            self.inputData3.delete(0, tk.END)
+            self.inputData3.config(state='disabled')        
+        else:
+            self.inputData3.config(state='normal')
 
     def insereAtributo(self, event):
         atributoSel = self.listbox.get(tk.ACTIVE)
@@ -175,8 +186,15 @@ class MyGUI:
 
     def Gerar(self):
         tabela = self.combobox1.get()
-        if(tabela == ''):
-            messagebox.showerror('ERRO!', 'Selecione uma tabela!')
+        user = self.inputUser.get()
+        senha = self.inputSenha.get()
+        if(tabela == '' or user == '' or senha == ''):
+            if(tabela == ''):
+                messagebox.showerror('ERRO!', 'Selecione uma tabela!')
+            elif(user == ''):
+                messagebox.showerror('ERRO!', 'Entre com o usuário do banco de dados!')
+            elif(senha == ''):
+                messagebox.showerror('ERRO!', 'Entre com a senha do banco de dados!')
         else:
             self.dicFiltro = {}
             self.listaExibir = []
@@ -196,8 +214,6 @@ class MyGUI:
             self.listaExibir.append(self.cbVar5.get())
             self.listaExibir.append(self.cbVar6.get())
             
-            user = self.inputUser.get()
-            senha = self.inputSenha.get()
             atributos = list(self.listbox2.get(0, tk.END))
 
             info_exibir, info_filtros = ponte(user, senha, tabela, self.listaExibir, self.dicFiltro)
@@ -228,4 +244,4 @@ class MyGUI:
 def main():
     MyGUI()
 
-main()
+if __name__ == '__main__': main()
