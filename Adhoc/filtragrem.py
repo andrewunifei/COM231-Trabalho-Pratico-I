@@ -1,3 +1,0 @@
-registro.id
-registro.nome
-
