@@ -8,11 +8,12 @@ def getSession(user, senha):
     engine = create_engine(dburi, echo=False)
     Session = sessionmaker(bind=engine)
     session = Session()
+    
 
     return session, dburi
 
 def ponte(user, senha, nome_tabela, valores_exibir, valores_filtro):
-    session, dburi = getSession(user, senha) 
+    session, dburi = getSession(user, senha)
 
     info_exibir = bootloader_exibir(session, dburi, nome_tabela, valores_exibir)
     info_filtros = bootloader_filtros(session, nome_tabela, valores_filtro)

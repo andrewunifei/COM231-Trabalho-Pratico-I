@@ -218,7 +218,7 @@ class MyGUI:
 
             info_exibir, info_filtros = ponte(user, senha, tabela, self.listaExibir, self.dicFiltro)
             d = dict()
-            
+                
             for atributo in atributos:
                 d[atributo] = []
                 for registro in info_filtros:
@@ -240,6 +240,7 @@ class MyGUI:
         self.box1.set('')
         self.listbox.delete(0, tk.END)
         self.listbox2.delete(0, tk.END)
+        self.inputData3.config(state='disabled') 
     
 def main():
     MyGUI()
